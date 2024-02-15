@@ -10,16 +10,25 @@ import {
 import { useStore } from "../../../app/stores/store";
 import Loading from "../../../app/layout/Loading";
 import { observer } from "mobx-react-lite";
+import { Link, useParams } from "react-router-dom";
+import { useEffect } from "react";
 
 const ActivityDetails = () => {
   const { activityStore } = useStore();
   const {
     selectedActivity: activity,
-    openForm,
-    cancelSelectedActivity,
+    loadingInitial,
+    loadActivity,
   } = activityStore;
+  const { id } = useParams();
 
-  if (!activity) return <Loading />;
+  useEffect(() => {
+    if (id) {
+      loadActivity(id);
+    }
+  }, [loadActivity, id]);
+
+  if (!activity || loadingInitial) return <Loading />;
 
   return (
     <Card fluid>
@@ -37,13 +46,15 @@ const ActivityDetails = () => {
             basic
             color="blue"
             content="Edit"
-            onClick={() => openForm(activity.id)}
+            as={Link}
+            to={`/manage/${id} `}
           />
           <Button
             basic
-            onClick={cancelSelectedActivity}
             color="grey"
             content="cancel"
+            as={Link}
+            to="/activities"
           />
         </Button.Group>
       </CardContent>
