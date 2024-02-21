@@ -1,5 +1,5 @@
 import { Button, Header, Segment } from "semantic-ui-react";
-import { Activity } from "../../../app/models/activity";
+import { ActivityFormValues } from "../../../app/models/activity";
 import { useEffect, useState } from "react";
 import { useStore } from "../../../app/stores/store";
 import { observer } from "mobx-react-lite";
@@ -16,22 +16,11 @@ import MyDateInput from "../../../app/common/form/MyDateInput";
 
 const ActivityForm = () => {
   const { activityStore } = useStore();
-  const {
-    loading,
-    createActivity,
-    updateActivity,
-    loadActivity,
-    loadingInitial,
-  } = activityStore;
-  const [activity, setActivity] = useState<Activity>({
-    id: "",
-    title: "",
-    category: "",
-    date: null,
-    description: "",
-    city: "",
-    venue: "",
-  });
+  const { createActivity, updateActivity, loadActivity, loadingInitial } =
+    activityStore;
+  const [activity, setActivity] = useState<ActivityFormValues>(
+    new ActivityFormValues()
+  );
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -45,10 +34,11 @@ const ActivityForm = () => {
     city: Yup.string().required(),
   });
   useEffect(() => {
-    if (id) loadActivity(id).then((act) => setActivity(act!));
+    if (id)
+      loadActivity(id).then((act) => setActivity(new ActivityFormValues(act)));
   }, [id, loadActivity]);
 
-  const handleFormSubmit = (activity: Activity) => {
+  const handleFormSubmit = (activity: ActivityFormValues) => {
     if (!activity.id) {
       activity.id = uuid();
       createActivity(activity).then(() =>
@@ -97,7 +87,7 @@ const ActivityForm = () => {
               positive
               type="submit"
               content="Submit"
-              loading={loading}
+              loading={isSubmitting}
               disabled={isSubmitting || !isValid || !dirty}
             />
             <Button
