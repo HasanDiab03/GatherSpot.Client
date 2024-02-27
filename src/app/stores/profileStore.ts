@@ -91,16 +91,17 @@ export default class ProfileStore {
     }
   };
 
-  setDisplayName = (name: string) => {
-    if (this.profile) {
-      this.profile.displayName = name;
-    }
-  };
   updateProfile = async (newProfile: Partial<Profile>) => {
     this.updating = true;
     try {
       await agent.Profiles.updateProfile(newProfile);
       runInAction(() => {
+        if (
+          newProfile.displayName &&
+          newProfile.displayName !== store.userStore.user?.displayName
+        ) {
+          store.userStore.setDisplayName(newProfile.displayName);
+        }
         this.profile = { ...this.profile, ...newProfile } as Profile;
         this.updating = false;
       });
