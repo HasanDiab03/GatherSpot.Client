@@ -15,6 +15,7 @@ const ActivityDetails = () => {
     selectedActivity: activity,
     loadingInitial,
     loadActivity,
+    clearSelectedActivity,
   } = activityStore;
   const { id } = useParams();
 
@@ -22,7 +23,8 @@ const ActivityDetails = () => {
     if (id) {
       loadActivity(id);
     }
-  }, [loadActivity, id]);
+    return () => clearSelectedActivity();
+  }, [loadActivity, id, clearSelectedActivity]);
 
   if (!activity || loadingInitial) return <Loading />;
 
@@ -31,7 +33,7 @@ const ActivityDetails = () => {
       <Grid.Column width={10}>
         <ActivityDetailsHeader activity={activity} />
         <ActivityDetailsInfo activity={activity} />
-        <ActivityDetailsChat />
+        <ActivityDetailsChat activityId={activity.id} />
       </Grid.Column>
       <Grid.Column width={6}>
         <ActivityDetailsSidebar activity={activity} />
