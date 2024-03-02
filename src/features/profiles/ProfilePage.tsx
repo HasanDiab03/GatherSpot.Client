@@ -10,11 +10,12 @@ import Loading from "../../app/layout/Loading";
 const ProfilePage = () => {
   const { username } = useParams();
   const { profileStore } = useStore();
-  const { profile, loadingProfile, loadProfile } = profileStore;
+  const { profile, loadingProfile, loadProfile, setActiveTab } = profileStore;
 
   useEffect(() => {
     if (username) loadProfile(username);
-  }, [loadProfile, username]);
+    return () => setActiveTab(0);
+  }, [loadProfile, username, setActiveTab]);
   if (loadingProfile) return <Loading content="Loading Profile..." />;
   return (
     <Grid>
