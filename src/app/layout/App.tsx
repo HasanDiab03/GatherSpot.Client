@@ -1,7 +1,7 @@
 import { Container } from "semantic-ui-react";
 import Navbar from "./Navbar";
 import { observer } from "mobx-react-lite";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, ScrollRestoration, useLocation } from "react-router-dom";
 import Home from "../../features/home/Home";
 import { ToastContainer } from "react-toastify";
 import { useStore } from "../stores/store";
@@ -23,6 +23,7 @@ const App = () => {
   if (!commonStore.appLoaded) return <Loading content="Loading app..." />;
   return (
     <>
+      <ScrollRestoration />
       <ModalContainer />
       <ToastContainer position="bottom-right" hideProgressBar theme="colored" />
       {location.pathname === "/" ? (
