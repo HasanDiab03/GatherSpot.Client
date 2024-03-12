@@ -1,9 +1,18 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Link } from "react-router-dom";
-import { Button, Container, Header, Image, Segment } from "semantic-ui-react";
+import {
+  Button,
+  Container,
+  Divider,
+  Header,
+  Image,
+  Segment,
+} from "semantic-ui-react";
 import { useStore } from "../../app/stores/store";
 import { observer } from "mobx-react-lite";
 import LoginForm from "../users/LoginForm";
 import RegisterForm from "../users/RegisterForm";
+import FacebookLogin from "@greatsumini/react-facebook-login";
 
 const Home = () => {
   const { userStore, modalStore } = useStore();
@@ -43,6 +52,22 @@ const Home = () => {
             >
               Register
             </Button>
+            <Divider horizontal inverted>
+              Or
+            </Divider>
+            <Button
+              as={FacebookLogin}
+              appId="1048017146300117"
+              size="huge"
+              inverted
+              color="facebook"
+              content="Login With Facebook"
+              loading={userStore.fbLoading}
+              onSuccess={(resp: any) =>
+                userStore.facebookLogin(resp.accessToken)
+              }
+              onFail={(resp: any) => console.log(resp)}
+            />
           </>
         )}
       </Container>
